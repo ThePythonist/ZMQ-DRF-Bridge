@@ -43,9 +43,9 @@ def start_zmq_server():
 
     print("Server is running")
     while True:
-        message = socket.recv_json()
-        print(f"Received command: {message}")
-        response = process_command(message)
+        data = socket.recv_json()
+        print(f"Received command: {data}")
+        response = process_command(data)
         socket.send_json(response)
 
 

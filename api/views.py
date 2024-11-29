@@ -3,9 +3,12 @@ from rest_framework.response import Response
 from rest_framework import status
 import zmq
 from .customlogs import make_log, tictoc
+from .permissions import *
 
 
 class CommandView(APIView):
+    permission_classes = [IsStaff]
+
     # log the runtime
     @tictoc
     def post(self, request):
