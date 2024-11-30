@@ -38,8 +38,8 @@ handle both mathematical operations and OS commands.
 
 1. **Clone the repository:**
    ```bash
-   git clone https://github.com/yourusername/yourproject.git
-   cd yourproject
+   git clone https://github.com/ThePythonist/ZMQ-DRF-Bridge.git
+   cd ZMQ-DRF-Bridge
    ```
 
 2. **Set up a virtual environment:**
@@ -77,7 +77,7 @@ handle both mathematical operations and OS commands.
 
 ## API Endpoints
 
-- **POST /v1/command/**
+- **POST /api/v1/command/**
 
   Sends a command to the ZeroMQ server.
 
@@ -95,7 +95,7 @@ operations.
 To perform a mathematical addition using Postman:
 
 1. Open Postman and create a new **POST** request.
-2. Enter the URL: `http://localhost:8000/v1/command/`.
+2. Enter the URL: `http://localhost:8000/api/v1/command/`.
 3. In the **Authorization** tab, select **Basic Auth** and enter your credentials.
 4. In the **Body** tab, select **raw** and set the format to **JSON**.
 5. Enter the following JSON:
@@ -123,7 +123,7 @@ To perform a mathematical addition using Postman:
 To execute an OS command (e.g., `echo`) using Postman:
 
 1. Open Postman and create a new **POST** request.
-2. Enter the URL: `http://localhost:8000/v1/command/`.
+2. Enter the URL: `http://localhost:8000/api/v1/command/`.
 3. In the **Authorization** tab, select **Basic Auth** and enter your credentials.
 4. In the **Body** tab, select **raw** and set the format to **JSON**.
 5. Enter the following JSON:
