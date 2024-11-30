@@ -81,25 +81,6 @@ handle both mathematical operations and OS commands.
 
   Sends a command to the ZeroMQ server.
 
-  **Request Body:**
-  ```json
-  {
-      "type": "os" | "math",
-      "operation": "add" | "subtract" | "multiply" | "divide", // for math
-      "a": number,  // for math
-      "b": number,  // for math
-      "command": "your_os_command" // for OS commands
-  }
-  ```
-
-  **Response:**
-  ```json
-  {
-      "status": "success",
-      "result": "..." // Result of the operation or command output
-  }
-  ```
-
 ## Custom Permissions
 
 The project includes a custom permission class, `IsStaff`, which restricts access to potentially dangerous commands.
