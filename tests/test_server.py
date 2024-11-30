@@ -1,28 +1,29 @@
 import unittest
 import zmq
 import threading
-import time
-
-
-def send_command(command):
-    context = zmq.Context()
-    socket = context.socket(zmq.REQ)
-    socket.connect("tcp://localhost:5555")
-
-    # Send the command
-    socket.send_json(command)
-
-    # Receive the response
-    response = socket.recv_json()
-    return response
-
-
-def client_thread(command, results, index):
-    response = send_command(command)
-    results[index] = response  # Store the response in the results list
 
 
 class TestZMQServer(unittest.TestCase):
+    @classmethod
+    def setUpClass(cls):
+        cls.context = zmq.Context()
+        cls.socket = cls.context.socket(zmq.REQ)
+        cls.socket.connect("tcp://localhost:5555")
+        cls.lock = threading.Lock()
+
+    @classmethod
+    def tearDownClass(cls):
+        cls.socket.close()
+        cls.context.term()
+
+    def send_command(self, command):
+        with self.lock:  # Ensure thread safety
+            self.socket.send_json(command)
+            return self.socket.recv_json()
+
+    def client_thread(self, command, results, index):
+        response = self.send_command(command)
+        results[index] = response  # Store the response in the results list
 
     def test_concurrent_requests(self):
         commands = [
@@ -31,6 +32,8 @@ class TestZMQServer(unittest.TestCase):
             {"type": "math", "operation": "multiply", "a": 6, "b": 7},
             {"type": "math", "operation": "divide", "a": 15, "b": 3},
             {"type": "os", "command": "echo Hello World"},
+            {"type": "os", "command": "ipconfig"},
+            {"type": "os", "command": "arp -a"},
         ]
 
         expected_results = [
@@ -45,7 +48,7 @@ class TestZMQServer(unittest.TestCase):
         results = [None] * len(commands)
 
         for index, command in enumerate(commands):
-            thread = threading.Thread(target=client_thread, args=(command, results, index))
+            thread = threading.Thread(target=self.client_thread, args=(command, results, index))
             threads.append(thread)
             thread.start()
 

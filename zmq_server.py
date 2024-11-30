@@ -41,7 +41,6 @@ async def process_command(command):
             return await handle_math(command)
         else:
             return {'status': 'error', 'message': 'Invalid command type'}
-
     except Exception as e:
         make_log("error", e)
         return {'status': 'error', 'message': str(e)}
