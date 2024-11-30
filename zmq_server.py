@@ -1,3 +1,4 @@
+import datetime
 import zmq
 import zmq.asyncio
 import asyncio
@@ -46,6 +47,11 @@ async def process_command(command):
         return {'status': 'error', 'message': str(e)}
 
 
+async def process_command_and_send_response(socket, command):
+    response = await process_command(command)
+    await socket.send_json(response)
+
+
 async def start_zmq_server():
     context = zmq.asyncio.Context()
     socket = context.socket(zmq.REP)
@@ -54,13 +60,13 @@ async def start_zmq_server():
     print("Server is running")
     while True:
         data = await socket.recv_json()
-        print(f"Received command: {data}")
+        print(f"{datetime.datetime.now()} :::: Received command: {data}")
         make_log("info", f"request for command {data}")
-        response = await process_command(data)
-        await socket.send_json(response)
+
+        # Create a task to process the command concurrently
+        asyncio.create_task(process_command_and_send_response(socket, data))
 
 
 if __name__ == "__main__":
     asyncio.set_event_loop_policy(asyncio.WindowsSelectorEventLoopPolicy())
-
     asyncio.run(start_zmq_server())
